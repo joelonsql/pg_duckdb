@@ -35,7 +35,7 @@ pgduckdb_function_name_unsafe(Oid function_oid) {
 
 char *
 pgduckdb_function_name(Oid function_oid) {
-	return pgduckdb::DuckDBFunctionGuard<char *>(pgduckdb_function_name_unsafe, __FUNCTION__, function_oid);
+	return InvokeCPPFunc(pgduckdb_function_name_unsafe, function_oid);
 }
 /*
  * generate_relation_name computes the fully qualified name of the relation in

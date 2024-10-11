@@ -193,7 +193,7 @@ DuckdbPlannerHook_Unsafe(Query *parse, const char *query_string, int cursor_opti
 
 static PlannedStmt *
 DuckdbPlannerHook(Query *parse, const char *query_string, int cursor_options, ParamListInfo bound_params) {
-	return pgduckdb::DuckDBFunctionGuard<PlannedStmt *>(DuckdbPlannerHook_Unsafe, __FUNCTION__, parse, query_string,
+	return InvokeCPPFunc(DuckdbPlannerHook_Unsafe, parse, query_string,
 	                                                    cursor_options, bound_params);
 }
 
@@ -226,7 +226,7 @@ DuckdbUtilityHook_Unsafe(PlannedStmt *pstmt, const char *query_string, bool read
 static void
 DuckdbUtilityHook(PlannedStmt *pstmt, const char *query_string, bool read_only_tree, ProcessUtilityContext context,
                   ParamListInfo params, struct QueryEnvironment *query_env, DestReceiver *dest, QueryCompletion *qc) {
-	pgduckdb::DuckDBFunctionGuard<void>(DuckdbUtilityHook_Unsafe, __FUNCTION__, pstmt, query_string, read_only_tree,
+	InvokeCPPFunc(DuckdbUtilityHook_Unsafe, pstmt, query_string, read_only_tree,
 	                                    context, params, query_env, dest, qc);
 }
 

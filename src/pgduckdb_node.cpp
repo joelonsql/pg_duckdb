@@ -96,7 +96,7 @@ Duckdb_BeginCustomScan_Unsafe(CustomScanState *cscanstate, EState *estate, int e
 
 void
 Duckdb_BeginCustomScan(CustomScanState *cscanstate, EState *estate, int eflags) {
-	pgduckdb::DuckDBFunctionGuard<void>(Duckdb_BeginCustomScan_Unsafe, __FUNCTION__, cscanstate, estate, eflags);
+	InvokeCPPFunc(Duckdb_BeginCustomScan_Unsafe, cscanstate, estate, eflags);
 }
 
 static void
@@ -215,7 +215,7 @@ Duckdb_ExecCustomScan_Unsafe(CustomScanState *node) {
 
 static TupleTableSlot *
 Duckdb_ExecCustomScan(CustomScanState *node) {
-	return pgduckdb::DuckDBFunctionGuard<TupleTableSlot *>(Duckdb_ExecCustomScan_Unsafe, __FUNCTION__, node);
+	return InvokeCPPFunc(Duckdb_ExecCustomScan_Unsafe, node);
 }
 
 void
@@ -227,7 +227,7 @@ Duckdb_EndCustomScan_Unsafe(CustomScanState *node) {
 
 void
 Duckdb_EndCustomScan(CustomScanState *node) {
-	pgduckdb::DuckDBFunctionGuard<void>(Duckdb_EndCustomScan_Unsafe, __FUNCTION__, node);
+	InvokeCPPFunc(Duckdb_EndCustomScan_Unsafe, node);
 }
 
 void
@@ -254,7 +254,7 @@ Duckdb_ExplainCustomScan_Unsafe(CustomScanState *node, List *ancestors, ExplainS
 
 void
 Duckdb_ExplainCustomScan(CustomScanState *node, List *ancestors, ExplainState *es) {
-	pgduckdb::DuckDBFunctionGuard<void>(Duckdb_ExplainCustomScan_Unsafe, __FUNCTION__, node, ancestors, es);
+	InvokeCPPFunc(Duckdb_ExplainCustomScan_Unsafe, node, ancestors, es);
 }
 
 extern "C" void

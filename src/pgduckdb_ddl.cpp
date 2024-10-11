@@ -167,7 +167,7 @@ duckdb_create_table_trigger_unsafe(PG_FUNCTION_ARGS) {
 PG_FUNCTION_INFO_V1(duckdb_create_table_trigger);
 Datum
 duckdb_create_table_trigger(PG_FUNCTION_ARGS) {
-	return pgduckdb::DuckDBFunctionGuard<Datum>(duckdb_create_table_trigger_unsafe, __FUNCTION__, fcinfo);
+	return InvokeCPPFunc(duckdb_create_table_trigger_unsafe, fcinfo);
 }
 
 Datum
@@ -250,7 +250,7 @@ duckdb_drop_table_trigger_unsafe(PG_FUNCTION_ARGS) {
 PG_FUNCTION_INFO_V1(duckdb_drop_table_trigger);
 Datum
 duckdb_drop_table_trigger(PG_FUNCTION_ARGS) {
-	return pgduckdb::DuckDBFunctionGuard<Datum>(duckdb_drop_table_trigger_unsafe, __FUNCTION__, fcinfo);
+	return InvokeCPPFunc(duckdb_drop_table_trigger_unsafe, fcinfo);
 }
 
 Datum
@@ -314,10 +314,11 @@ duckdb_alter_table_trigger_unsafe(PG_FUNCTION_ARGS) {
 
 	PG_RETURN_NULL();
 }
-}
 
 PG_FUNCTION_INFO_V1(duckdb_alter_table_trigger);
 Datum
 duckdb_alter_table_trigger(PG_FUNCTION_ARGS) {
-	return pgduckdb::DuckDBFunctionGuard<Datum>(duckdb_alter_table_trigger_unsafe, __FUNCTION__, fcinfo);
+	return InvokeCPPFunc(duckdb_alter_table_trigger_unsafe, fcinfo);
+}
+
 }

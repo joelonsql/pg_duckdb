@@ -187,7 +187,7 @@ PG_FUNCTION_INFO_V1(install_extension);
 Datum
 install_extension(PG_FUNCTION_ARGS) {
 	Datum extension_name = PG_GETARG_DATUM(0);
-	bool result = pgduckdb::DuckDBFunctionGuard<bool>(pgduckdb::DuckdbInstallExtension, __FUNCTION__, extension_name);
+	bool result = InvokeCPPFunc(pgduckdb::DuckdbInstallExtension, extension_name);
 	PG_RETURN_BOOL(result);
 }
 
@@ -201,7 +201,7 @@ PG_FUNCTION_INFO_V1(pgduckdb_raw_query);
 Datum
 pgduckdb_raw_query(PG_FUNCTION_ARGS) {
 	const char *query = text_to_cstring(PG_GETARG_TEXT_PP(0));
-	auto result = pgduckdb::DuckDBFunctionGuard<const char *>(pgduckdb_raw_query_unsafe, __FUNCTION__, query);
+	auto result = InvokeCPPFunc(pgduckdb_raw_query_unsafe, query);
 	elog(NOTICE, "result: %s", result);
 	PG_RETURN_BOOL(true);
 }

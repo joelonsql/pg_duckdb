@@ -28,15 +28,15 @@ TokenizeString(char *str, const char delimiter) {
 /*
  * DuckdbGlobalLock should be held before calling.
  */
-template <typename Fn, Fn fn, typename... FuncArgs>
-typename std::invoke_result<Fn, FuncArgs...>::type
+template <typename Func, Func func, typename... FuncArgs>
+typename std::invoke_result<Func, FuncArgs...>::type
 __PostgresFunctionGuard__(const char *func_name, FuncArgs... args) {
 	MemoryContext ctx = CurrentMemoryContext;
 	ErrorData *edata = nullptr;
 	// clang-format off
 	PG_TRY();
 	{
-		return fn(std::forward<FuncArgs>(args)...);
+		return func(std::forward<FuncArgs>(args)...);
 	}
 	PG_CATCH();
 	{
@@ -55,12 +55,15 @@ __PostgresFunctionGuard__(const char *func_name, FuncArgs... args) {
 
 #define PostgresFunctionGuard(FUNC, ...) pgduckdb::__PostgresFunctionGuard__<decltype(&FUNC), &FUNC>("##FUNC##", __VA_ARGS__)
 
-template <typename FuncRetT, typename FuncType, typename... FuncArgs>
-FuncRetT
-DuckDBFunctionGuard(FuncType duckdb_function, const char *function_name, FuncArgs... args) {
+// template <typename FuncRetT, typename FuncType, typename... FuncArgs>
+// FuncRetT
+// DuckDBFunctionGuard(FuncType duckdb_function, const char *function_name, FuncArgs... args) {
+template <typename Func, Func func, typename... FuncArgs>
+typename std::invoke_result<Func, FuncArgs...>::type
+__CPPFunctionGuard__(const char *func_name, FuncArgs... args) {
 	const char *error_message = nullptr;
 	try {
-		return duckdb_function(args...);
+		return func(args...);
 	} catch (duckdb::Exception &ex) {
 		duckdb::ErrorData edata(ex.what());
 		error_message = pstrdup(edata.Message().c_str());
@@ -75,11 +78,22 @@ DuckDBFunctionGuard(FuncType duckdb_function, const char *function_name, FuncArg
 	}
 
 	if (error_message) {
-		elog(ERROR, "(PGDuckDB/%s) %s", function_name, error_message);
+		elog(ERROR, "(PGDuckDB/%s) %s", func_name, error_message);
 	}
 
 	std::abort(); // Cannot reach.
 }
+
+#define InvokeCPPFunc(FUNC, ...) pgduckdb::__CPPFunctionGuard__<decltype(&FUNC), &FUNC>(__FUNCTION__, __VA_ARGS__)
+
+
+template <typename Func, Func func, typename... FuncArgs>
+typename std::invoke_result<Func, FuncArgs...>::type
+__CPPFunctionGuard__Wrapper__(FuncArgs... args) {
+	return __CPPFunctionGuard__<Func, func>("TODO - __FUNCTION__", args...);
+}
+
+#define WRAP_CPP_FUNC(FUNC) pgduckdb::__CPPFunctionGuard__Wrapper__<decltype(&FUNC), &FUNC>
 
 std::string CreateOrGetDirectoryPath(std::string directory_name);
 
