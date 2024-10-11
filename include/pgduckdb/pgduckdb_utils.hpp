@@ -28,16 +28,15 @@ TokenizeString(char *str, const char delimiter) {
 /*
  * DuckdbGlobalLock should be held before calling.
  */
-template <typename T, typename FuncType, typename... FuncArgs>
-T
-PostgresFunctionGuard(FuncType postgres_function, FuncArgs... args) {
-	T return_value;
+template <typename Fn, Fn fn, typename... FuncArgs>
+typename std::invoke_result<Fn, FuncArgs...>::type
+__PostgresFunctionGuard__(const char *func_name, FuncArgs... args) {
 	MemoryContext ctx = CurrentMemoryContext;
 	ErrorData *edata = nullptr;
 	// clang-format off
 	PG_TRY();
 	{
-		return_value = postgres_function(args...);
+		return fn(std::forward<FuncArgs>(args)...);
 	}
 	PG_CATCH();
 	{
@@ -50,35 +49,15 @@ PostgresFunctionGuard(FuncType postgres_function, FuncArgs... args) {
 	if (edata) {
 		throw duckdb::Exception(duckdb::ExceptionType::EXECUTOR, edata->message);
 	}
-	return return_value;
+
+	std::abort(); // unreacheable
 }
 
-template <typename FuncType, typename... FuncArgs>
-void
-PostgresFunctionGuard(FuncType postgres_function, FuncArgs... args) {
-	MemoryContext ctx = CurrentMemoryContext;
-	ErrorData *edata = nullptr;
-	// clang-format off
-	PG_TRY();
-	{
-		postgres_function(args...);
-	}
-	PG_CATCH();
-	{
-		MemoryContextSwitchTo(ctx);
-		edata = CopyErrorData();
-		FlushErrorState();
-	}
-	PG_END_TRY();
-	// clang-format on
-	if (edata) {
-		throw duckdb::Exception(duckdb::ExceptionType::EXECUTOR, edata->message);
-	}
-}
+#define PostgresFunctionGuard(FUNC, ...) pgduckdb::__PostgresFunctionGuard__<decltype(&FUNC), &FUNC>("##FUNC##", __VA_ARGS__)
 
 template <typename FuncRetT, typename FuncType, typename... FuncArgs>
 FuncRetT
-DuckDBFunctionGuard(FuncType duckdb_function, const char* function_name, FuncArgs... args) {
+DuckDBFunctionGuard(FuncType duckdb_function, const char *function_name, FuncArgs... args) {
 	const char *error_message = nullptr;
 	try {
 		return duckdb_function(args...);
@@ -109,5 +88,8 @@ duckdb::unique_ptr<duckdb::QueryResult> DuckDBQueryOrThrow(duckdb::ClientContext
 duckdb::unique_ptr<duckdb::QueryResult> DuckDBQueryOrThrow(duckdb::Connection &connection, const std::string &query);
 
 duckdb::unique_ptr<duckdb::QueryResult> DuckDBQueryOrThrow(const std::string &query);
+
+bool TryDuckDBQuery(duckdb::ClientContext &context, const std::string &query);
+bool TryDuckDBQuery(const std::string &query);
 
 } // namespace pgduckdb
