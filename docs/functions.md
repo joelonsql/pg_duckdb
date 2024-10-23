@@ -1,9 +1,10 @@
 # pg_duckdb Functions
 
-## Data Lake Functions
+By default, functions without a schema listed below are installed into `public`. You can choose to install these functions to an alternate location by running `CREATE EXTENSION pg_duckdb WITH SCHEMA schema`.
 
-By default, functions without a schema listed below are installed into `public`. You can choose to install these
-functions to an alternate location by running `CREATE EXTENSION pg_duckdb WITH SCHEMA ...`.
+Note: `ALTER EXTENSION pg_duckdb WITH SCHEMA schema` is not currently supported.
+
+## Data Lake Functions
 
 | Name                                      | Description                       |
 | :---------------------------------------- | :-------------------------------- |
@@ -28,9 +29,9 @@ functions to an alternate location by running `CREATE EXTENSION pg_duckdb WITH S
 | :------------------------------------------------------- | :---------------------------------------- |
 | [`duckdb.force_motherduck_sync`](#force_motherduck_sync) | Forces a full resync of Motherduck schema |
 
-## Detailed Documentation
+## Detailed Descriptions
 
-#### read_parquet(path TEXT or TEXT[], /* plus optional arguments */)
+#### <a name="read_parquet"></a>read_parquet(path TEXT or TEXT[], /* plus optional arguments */)
 
 Reads a parquet file, either from a remote location (via httpfs) or a local file.
 
