@@ -6,28 +6,28 @@ Note: `ALTER EXTENSION pg_duckdb WITH SCHEMA schema` is not currently supported.
 
 ## Data Lake Functions
 
-| Name                                      | Description                       |
-| :---------------------------------------- | :-------------------------------- |
-| [`read_parquet`](#read_parquet)           | Read a parquet file               |
-| [`read_csv`](#read_csv)                   | Read a CSV file                   |
-| [`iceberg_scan`](#iceberg_scan)           | Read an Iceberg dataset           |
-| [`iceberg_metadata`](#iceberg_metadata)   | Read Iceberg metadata             |
+| Name  | Description |
+| :---- | :---------- |
+| [`read_parquet`](#read_parquet) | Read a parquet file |
+| [`read_csv`](#read_csv) | Read a CSV file |
+| [`iceberg_scan`](#iceberg_scan) | Read an Iceberg dataset |
+| [`iceberg_metadata`](#iceberg_metadata) | Read Iceberg metadata |
 | [`iceberg_snapshots`](#iceberg_snapshots) | Read Iceberg snapshot information |
 
 ## DuckDB Administration Functions
 
-| Name                                             | Description                          |
-| :----------------------------------------------- | :----------------------------------- |
-| [`duckdb.cache`](#cache)                         | Caches a Parquet or CSV file to disk |
-| [`duckdb.install_extension`](#install_extension) | Installs a DuckDB extension          |
-| [`duckdb.raw_query`](#raw_query)                 | Runs a query directly against DuckDB |
-| [`duckdb.recycle_ddb`](#recycle_ddb)             | TODO                                 |
+| Name  | Description |
+| :---- | :---------- |
+| [`duckdb.cache`](#cache) | Caches a Parquet or CSV file to disk |
+| [`duckdb.install_extension`](#install_extension) | Installs a DuckDB extension |
+| [`duckdb.raw_query`](#raw_query) | Runs a query directly against DuckDB |
+| [`duckdb.recycle_ddb`](#recycle_ddb) | TODO |
 
 ## Motherduck Functions
 
-| Name                                                     | Description                               |
-| :------------------------------------------------------- | :---------------------------------------- |
-| [`duckdb.force_motherduck_sync`](#force_motherduck_sync) | Forces a full resync of Motherduck schema |
+| Name  | Description |
+| :---- | :---------- |
+| [`duckdb.force_motherduck_sync`](#force_motherduck_sync) | Forces a full resync of Motherduck databases and schemas to Postgres |
 
 ## Detailed Descriptions
 
