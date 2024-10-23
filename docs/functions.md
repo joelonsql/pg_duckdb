@@ -85,3 +85,50 @@ Compatibility notes:
 
 * `columns` is not currently supported.
 * `nullstr` must be an array (`TEXT[]`).
+
+#### <a name="iceberg_scan"></a>`iceberg_scan(path TEXT, /* optional parameters */)`
+
+Reads an Iceberg table, either from a remote location (via httpfs) or a local directory.
+
+To use `iceberg_scan`, you must enable the extension:
+
+```sql
+SELECT duckdb.install_extension('iceberg');
+```
+
+Returns a record set (`SETOF record`). Functions that return record sets need to have their columns and types specified using `AS`. You must specify at least one column and any columns used in your query. For example:
+
+```sql
+SELECT COUNT(i) FROM iceberg_scan('data/iceberg/table') AS (int i);
+```
+
+Further information:
+
+* [DuckDB Iceberg extension documentation](https://duckdb.org/docs/extensions/iceberg.html)
+
+##### Required Arguments
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| path | text | The path, either to a remote httpfs location or a local location (if enabled), of the Iceberg table to read. |
+
+##### Optional Arguments
+
+Optional parameters mirror DuckDB's `iceberg_scan` function based on the DuckDB source code. However, documentation on these parameters is limited.
+
+| Name | Type | Default | Description |
+| :--- | :--- | :------ | :---------- |
+| allowed_moved_paths | boolean | false | ensures that some path resolution is performed, which allows scanning Iceberg tables that are moved. |
+| mode | text | `''` | |
+| metadata_compression_codec | text | `'none'` | |
+| skip_schema_inference | boolean | false | |
+| version | text | `'version-hint.text'` | |
+| version_name_format | text | `'v%s%s.metadata.json,%s%s.metadata.json'` | |
+
+#### <a name="iceberg_metadata"></a>`iceberg_metadata(path TEXT, /* optional parameters */)`
+
+TODO
+
+#### <a name="iceberg_snapshots"></a>`iceberg_snapshots(path TEXT, /* optional parameters */)`
+
+TODO
