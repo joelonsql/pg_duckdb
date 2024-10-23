@@ -31,7 +31,7 @@ Note: `ALTER EXTENSION pg_duckdb WITH SCHEMA schema` is not currently supported.
 
 ## Detailed Descriptions
 
-#### <a name="read_parquet"></a>read_parquet(path TEXT or TEXT[], /* optional parameters */)
+#### <a name="read_parquet"></a>`read_parquet(path TEXT or TEXT[], /* optional parameters */)`
 
 Reads a parquet file, either from a remote location (via httpfs) or a local file.
 
@@ -56,7 +56,7 @@ Further information:
 
 Optional parameters mirror [DuckDB's read_parquet function](https://duckdb.org/docs/data/parquet/overview.html#parameters). To specify optional parameter, use `parameter := 'value'`.
 
-#### <a name="read_csv">read_csv(path TEXT or TEXT[], /* optional parameters */)
+#### <a name="read_csv"></a>`read_csv(path TEXT or TEXT[], /* optional parameters */)`
 
 Reads a CSV file, either from a remote location (via httpfs) or a local file.
 
